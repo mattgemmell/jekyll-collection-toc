@@ -36,7 +36,7 @@ Place the include into your Jekyll site's `_includes` folder.
 		- blue-shirts/troi.markdown
 		- blue-shirts/crusher.markdown
 		
-This would generate an HTML list which, when rendered in a browser, visually resembles the plain-text equivalent list below. The filenames are assumed to correspond to the file's titles (in their YAML front matter) in the conventional manner.
+	This would generate an HTML list which, when rendered in a browser, visually resembles the plain-text equivalent list below. The filenames are assumed to correspond to the file's titles (in their YAML front matter) in the conventional manner.
 		
 		1. Crew
 		2. Red Shirts
