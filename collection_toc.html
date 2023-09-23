@@ -1,0 +1,96 @@
+{% comment %}
+
+Collection Table of Contents - an include for Jekyll
+By Matt Gemmell - https://mattgemmell.scot/
+
+[This file is for use with the Jekyll static web site generator, which is written in Ruby, is free, and can be found here: https://jekyllrb.com ] 
+
+This include assumes you have a Jekyll collection whose files/posts are stored hierarchically in the filesystem, and whose order is specified in your site's _config.yml file.
+
+When invoked, this include will generate a simple HTML list (OL or UL) reflecting the hierarchical nature of the ordered files, with each entry being the relevant file's title, linked to that file's URL. If the current page is one of the entries, that entry will not be linked. The list itself has CSS class "toc", and will be an ordered list (OL) by default. There is an optional parameter to generate an UL-type list instead.
+
+Installation: place the include into your Jekyll site's _includes folder.
+
+Usage: {% include collection_toc.html collection_name="your-collection-name-here" %}
+
+Notes:
+	1. The "collection_name" parameter is the name of the collection as a string; it is NOT a collection object, array of collection entries, or anything else.
+	
+	2. There's an optional "unordered" parameter, which if specified and set to "true" will cause the HTML list to be of the unordered (UL) type. The actual ordering of the list's entries is unaffected by this setting; it only affects the resulting HTML markup. Typically, browsers render an ordered list with ascending numbered items, and render an unordered list as bulleted items, but CSS may of course change this behaviour.
+	
+	3. This include assumes a certain reasonable rationale regarding your collection's files on disk and their ordering as specified in the _config.yml file, as follows. When a subsequent entry in the order is at a deeper level of nesting in the filesystem than the prior entry, the subsequent entry is assumed to be the child of the prior one. An example order is below.
+
+		- crew.markdown
+		- red-shirts.markdown
+		- red-shirts/picard.markdown
+		- red-shirts/riker.markdown
+		- yellow-shirts.markdown
+		- yellow-shirts/data.markdown
+		- yellow-shirts/laforge.markdown
+		- yellow-shirts/worf.markdown
+		- blue-shirts.markdown
+		- blue-shirts/troi.markdown
+		- blue-shirts/crusher.markdown
+		
+		This would generate an HTML list which, when rendered in a browser, visually resembles the plain-text equivalent list below. The filenames are assumed to correspond to the file's titles (in their YAML front matter) in the conventional manner.
+		
+		1. Crew
+		2. Red Shirts
+			1. Picard
+			2. Riker
+		3. Yellow Shirts
+			1. Data
+			2. LaForge
+			3. Worf
+		4. Blue Shirts
+			1. Troi
+			2. Crusher
+
+Why this is useful: Collections have the handy property of having an order, such that each page can have a link to the previous and/or next entries. Jekyll allows storing the corresponding content files hierarchically in the filesystem, and hierarchy often has semantic significance, such as for sub-sections or topics. This very simple include allows generating a linked Table of Contents which reflects the implicit hierarchical nature of a collection's files on disk, exposing those semantics, without sacrificing the convenience of having a conceptually linear overall order. This is especially useful for lengthy guides, reviews, tutorials, theses, documentation, and so forth.
+
+{% endcomment %}
+
+
+{% assign the_collection = site.collections | where: "label", include.collection_label | first %}
+{% if include.unordered == true %}{% assign list_tag = "ul" %}{% else %}{% assign list_tag = "ol" %}{% endif %}
+{% assign depth = 0 %}
+
+<{{ list_tag }} class="toc">
+{% for doc in the_collection.docs %}
+	{% assign rel_path = doc.path | split: the_collection.relative_directory | last | remove_first: "/" %}
+	{% if the_collection.order contains rel_path %}
+	
+		{% assign num_slashes = rel_path | split: "/" | size | minus: 1 %}
+		
+		{% if forloop.first == false and num_slashes < depth %}
+			{% assign min_val = num_slashes | plus: 1 %}
+			{% for x in (min_val..depth) %}
+				</li></{{ list_tag }}>
+				{% assign depth = depth | minus: 1 %}
+			{% endfor %}
+		{% endif %}
+		
+		{% if num_slashes > depth %}
+			{% assign max_val = num_slashes | minus: 1 %}
+			{% for x in (depth..max_val) %}
+				<{{ list_tag }}><li>
+				{% assign depth = depth | plus: 1 %}
+			{% endfor %}
+		{% else %}
+			{% unless forloop.first %}</li>{% endunless %}
+			<li>
+		{% endif %}
+		
+		{% if page.url == doc.url %}{{ doc.title }}{% else %}<a href="{{doc.url}}">{{ doc.title }}</a>{% endif %}
+	
+	{% endif %}
+{% endfor %}
+
+{% if depth > 0 %}
+	{% for x in (1..depth) %}
+		</li></{{ list_tag }}>
+		{% assign depth = depth | minus: 1 %}
+	{% endfor %}
+{% endif %}
+	</li>
+</{{ list_tag }}>
