@@ -4,7 +4,7 @@ By [Matt Gemmell](https://mattgemmell.scot/) - https://mattgemmell.scot/
 
 Jekyll include which generates a hierarchical table of contents list for a given collection.
 
-(This file is for use with the [Jekyll static web site generator](https://jekyllrb.com), which is written in Ruby, is free.)
+(This file is for use with the [Jekyll static web site generator](https://jekyllrb.com), which is written in Ruby, and is free.)
 
 This include assumes you have a Jekyll collection whose files/posts are stored hierarchically in the filesystem, and whose order is specified in your site's `_config.yml` file.
 
