@@ -52,7 +52,7 @@ Place the include into your Jekyll site's `_includes` folder.
 			1. Troi
 			2. Crusher
 
-4. There's also an optional "`collated`" parameter, which if specified and set to "`true`" will cause the links to be to anchors on the same page, rather than to each document's own URL. The anchors will be the slugified form of the corresponding document's own (root-relative) URL, i.e. `#{{ doc.url | slugify }}` in Liquid. This is useful for collated versions of a collection, where a single page contains the content of all documents within a collection, for example as a convenience for printing or saving.
+4. There's also an optional "`collated`" parameter, which if specified and set to "`true`" will cause the links to be to anchors on the same page, rather than to each document's own URL. The anchors will be the slugified form of the corresponding document's own (root-relative) URL, i.e. `#{{ doc.url | slugify }}` in Liquid. This is useful for collated versions of a collection, where a single page contains the content of all documents within a collection, for example as a convenience for printing or saving. See the "`example-collated-page.markdown`" file in this repository for an example of a Jekyll page which will create a collated view of a given collection, rewriting any inter-document links to still work properly.
 
 ## Why this is useful
 
